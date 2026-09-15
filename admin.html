@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Complaint Management Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#182230;font-family:Arial,Helvetica,sans-serif}.hidden{display:none!important}.login-shell{min-height:100vh;display:grid;place-items:center;padding:24px}.login-card{width:min(430px,100%);background:#fff;padding:30px;border-radius:20px;box-shadow:0 18px 50px rgba(16,24,40,.12)}.brand{display:flex;gap:14px;align-items:center}.logo{width:54px;height:54px;border-radius:14px;background:#1d4ed8;color:#fff;display:grid;place-items:center;font-weight:900}.eyebrow{margin:0 0 5px;color:#1d4ed8;font-size:12px;font-weight:800;letter-spacing:.12em}h1,h2,h3,p{margin-top:0}.muted{color:#667085;line-height:1.5}.field{margin:16px 0}.field label{display:block;margin-bottom:7px;font-size:13px;font-weight:800}input,select,textarea{width:100%;border:1px solid #d0d5dd;border-radius:10px;padding:11px 12px;font:inherit;outline:none;background:#fff}input:focus,select:focus,textarea:focus{border-color:#84a9ff;box-shadow:0 0 0 4px rgba(29,78,216,.1)}button{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}.primary{background:#1d4ed8;color:#fff}.secondary{background:#eef2f6;color:#344054}.danger{background:#fee2e2;color:#991b1b}.full{width:100%}.tiny{font-size:12px;color:#667085;margin-top:10px}.app{min-height:100vh}.topbar{background:#0f172a;color:#fff;padding:16px 22px;display:flex;justify-content:space-between;gap:18px;align-items:center;position:sticky;top:0;z-index:20}.topbar .title{display:flex;align-items:center;gap:12px}.topbar .logo{width:42px;height:42px;border-radius:11px;background:#2563eb}.topbar h2{margin:0;font-size:19px}.top-actions{display:flex;gap:9px;align-items:center}.top-actions button{padding:9px 12px}.container{width:min(1450px,calc(100% - 30px));margin:24px auto 40px}.warning{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;border-radius:12px;padding:13px 15px;margin-bottom:18px;line-height:1.45}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:18px}.stat{background:#fff;border-radius:14px;padding:18px;box-shadow:0 6px 20px rgba(16,24,40,.06)}.stat .num{font-size:30px;font-weight:900;margin-top:8px}.stat small{color:#667085;font-weight:700}.toolbar{background:#fff;border-radius:14px;padding:14px;display:grid;grid-template-columns:2fr repeat(3,1fr) auto;gap:10px;box-shadow:0 6px 20px rgba(16,24,40,.06);margin-bottom:16px}.table-card{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(16,24,40,.06);overflow:hidden}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:1100px}th,td{padding:13px 14px;border-bottom:1px solid #eaecf0;text-align:left;vertical-align:top}th{background:#f8fafc;color:#475467;font-size:12px;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:74px}td{font-size:14px}.subject{font-weight:800;max-width:260px}.ref{font-family:monospace;font-weight:800}.badge{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;white-space:nowrap}.b-new{background:#dbeafe;color:#1e40af}.b-review{background:#fef3c7;color:#92400e}.b-investigation{background:#ede9fe;color:#6d28d9}.b-resolved{background:#dcfce7;color:#166534}.b-closed{background:#e5e7eb;color:#374151}.u-low{background:#f3f4f6;color:#4b5563}.u-medium{background:#dbeafe;color:#1e40af}.u-high{background:#ffedd5;color:#9a3412}.u-critical{background:#fee2e2;color:#991b1b}.empty{padding:42px;text-align:center;color:#667085}.modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;place-items:center;padding:20px;z-index:60}.modal.show{display:grid}.modal-card{width:min(900px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;padding:24px}.modal-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.close{background:#eef2f6;color:#344054;padding:8px 11px}.detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.detail-box{background:#f8fafc;border-radius:10px;padding:12px}.detail-box small{display:block;color:#667085;font-size:11px;font-weight:800;text-transform:uppercase;margin-bottom:5px}.detail-section{margin:18px 0}.detail-section h3{font-size:14px;margin-bottom:8px}.text-box{white-space:pre-wrap;background:#f8fafc;border:1px solid #eaecf0;border-radius:10px;padding:13px;line-height:1.55}.editor{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.count-note{padding:11px 14px;color:#667085;font-size:12px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#22c55e;margin-right:6px}@media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:1fr 1fr}.toolbar .search{grid-column:1/-1}}@media(max-width:700px){.topbar{align-items:flex-start}.top-actions{flex-wrap:wrap;justify-content:flex-end}.container{width:min(100% - 18px,1450px)}.stats{grid-template-columns:1fr 1fr}.toolbar{grid-template-columns:1fr}.toolbar .search{grid-column:auto}.detail-grid,.editor{grid-template-columns:1fr}.modal-card{padding:18px}.stat .num{font-size:25px}}
+</style>
+</head>
+<body>
+<section id="loginShell" class="login-shell">
+  <div class="login-card">
+    <div class="brand"><div class="logo">RF</div><div><p class="eyebrow">MANAGEMENT ACCESS</p><h2 style="margin:0">Complaint Dashboard</h2></div></div>
+    <p id="loginIntro" class="muted" style="margin-top:18px">Create a management PIN on this browser. This protects the dashboard interface only; it is not secure server-side authentication.</p>
+    <div class="field"><label id="pinLabel" for="pin">Create PIN</label><input id="pin" type="password" inputmode="numeric" maxlength="12" placeholder="Enter management PIN"></div>
+    <div id="confirmWrap" class="field"><label for="confirmPin">Confirm PIN</label><input id="confirmPin" type="password" inputmode="numeric" maxlength="12" placeholder="Repeat PIN"></div>
+    <button id="loginBtn" class="primary full">Set PIN & Open Dashboard</button>
+    <p id="loginMsg" class="tiny"></p>
+  </div>
+</section>
+
+<div id="app" class="app hidden">
+  <header class="topbar">
+    <div class="title"><div class="logo">RF</div><div><div style="font-size:11px;color:#93c5fd;font-weight:800;letter-spacing:.1em">CONFIDENTIAL</div><h2>Complaint Management Dashboard</h2></div></div>
+    <div class="top-actions"><button class="secondary" id="refreshBtn">Refresh</button><button class="secondary" id="exportBtn">Export CSV</button><button class="danger" id="logoutBtn">Lock</button></div>
+  </header>
+
+  <main class="container">
+    <div class="warning"><strong>Prototype data notice:</strong> this dashboard currently reads complaints from this browser only. Complaints submitted on another phone or PC will not appear here until a central database is connected.</div>
+
+    <section class="stats">
+      <div class="stat"><small>Total Complaints</small><div id="statTotal" class="num">0</div></div>
+      <div class="stat"><small>New</small><div id="statNew" class="num">0</div></div>
+      <div class="stat"><small>Under Review / Investigation</small><div id="statReview" class="num">0</div></div>
+      <div class="stat"><small>Resolved / Closed</small><div id="statResolved" class="num">0</div></div>
+      <div class="stat"><small>Critical</small><div id="statCritical" class="num">0</div></div>
+    </section>
+
+    <section class="toolbar">
+      <input id="search" class="search" placeholder="Search reference, employee, title, department, category...">
+      <select id="statusFilter"><option value="">All Statuses</option><option>New</option><option>Under Review</option><option>Investigation</option><option>Resolved</option><option>Closed</option></select>
+      <select id="urgencyFilter"><option value="">All Urgency</option><option>Low</option><option>Medium</option><option>High</option><option>Critical / Immediate Attention</option></select>
+      <select id="categoryFilter"><option value="">All Categories</option></select>
+      <button class="secondary" id="resetFilters">Reset</button>
+    </section>
+
+    <section class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Reference</th><th>Submitted</th><th>Complaint</th><th>Reporter</th><th>Category</th><th>Urgency</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="complaintRows"></tbody>
+        </table>
+      </div>
+      <div id="resultCount" class="count-note"></div>
+      <div id="emptyState" class="empty hidden"><h3>No complaints found</h3><p>Try changing your filters, or submit a test complaint from the employee form on this same browser.</p></div>
+    </section>
+  </main>
+</div>
+
+<div id="detailModal" class="modal">
+  <div class="modal-card">
+    <div class="modal-head"><div><p class="eyebrow">COMPLAINT DETAILS</p><h2 id="modalTitle">Complaint</h2><div id="modalRef" class="ref"></div></div><button id="closeModal" class="close">Close</button></div>
+    <div id="detailGrid" class="detail-grid"></div>
+    <div class="detail-section"><h3>Complaint Details</h3><div id="modalDetails" class="text-box"></div></div>
+    <div class="detail-section"><h3>Requested Outcome</h3><div id="modalOutcome" class="text-box"></div></div>
+    <div class="editor">
+      <div class="field"><label for="editStatus">Status</label><select id="editStatus"><option>New</option><option>Under Review</option><option>Investigation</option><option>Resolved</option><option>Closed</option></select></div>
+      <div class="field"><label for="assignedTo">Assigned To / PIC</label><input id="assignedTo" placeholder="e.g. HR Manager"></div>
+    </div>
+    <div class="field"><label for="managementRemarks">Management Remarks</label><textarea id="managementRemarks" rows="5" placeholder="Internal management notes, action taken, follow-up required..."></textarea></div>
+    <div class="modal-actions"><button id="cancelEdit" class="secondary">Cancel</button><button id="saveChanges" class="primary">Save Changes</button></div>
+  </div>
+</div>
+
+<script>
+const STORAGE='employeeComplaints',PIN_KEY='complaintDashboardPin',SESSION_KEY='complaintDashboardUnlocked';
+const $=id=>document.getElementById(id);let complaints=[],activeIndex=null;
+function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
+function load(){try{complaints=JSON.parse(localStorage.getItem(STORAGE)||'[]')}catch{complaints=[]}complaints=complaints.map(c=>({...c,status:c.status||'New',assignedTo:c.assignedTo||'',managementRemarks:c.managementRemarks||''}));}
+function save(){localStorage.setItem(STORAGE,JSON.stringify(complaints))}
+function fmtDate(v){if(!v)return '-';const d=new Date(v);return isNaN(d)?v:d.toLocaleString()}
+function statusClass(s){return {'New':'b-new','Under Review':'b-review','Investigation':'b-investigation','Resolved':'b-resolved','Closed':'b-closed'}[s]||'b-new'}
+function urgencyClass(u){if((u||'').startsWith('Critical'))return'u-critical';return {'High':'u-high','Medium':'u-medium','Low':'u-low'}[u]||'u-low'}
+function setupCategories(){const current=$('categoryFilter').value;const cats=[...new Set(complaints.map(c=>c.category).filter(Boolean))].sort();$('categoryFilter').innerHTML='<option value="">All Categories</option>'+cats.map(c=>`<option>${esc(c)}</option>`).join('');$('categoryFilter').value=current}
+function filtered(){const q=$('search').value.trim().toLowerCase(),s=$('statusFilter').value,u=$('urgencyFilter').value,cat=$('categoryFilter').value;return complaints.map((c,i)=>({c,i})).filter(({c})=>{const hay=[c.reference,c.employeeName,c.employeeId,c.department,c.subject,c.category,c.location,c.details,c.assignedTo].join(' ').toLowerCase();return(!q||hay.includes(q))&&(!s||c.status===s)&&(!u||c.urgency===u)&&(!cat||c.category===cat)})}
+function render(){load();setupCategories();$('statTotal').textContent=complaints.length;$('statNew').textContent=complaints.filter(c=>c.status==='New').length;$('statReview').textContent=complaints.filter(c=>['Under Review','Investigation'].includes(c.status)).length;$('statResolved').textContent=complaints.filter(c=>['Resolved','Closed'].includes(c.status)).length;$('statCritical').textContent=complaints.filter(c=>(c.urgency||'').startsWith('Critical')).length;const rows=filtered();$('complaintRows').innerHTML=rows.map(({c,i})=>`<tr><td class="ref">${esc(c.reference||'-')}</td><td>${esc(fmtDate(c.submittedAt))}</td><td><div class="subject">${esc(c.subject||'-')}</div><div class="tiny">${esc(c.location||'')}</div></td><td>${esc(c.anonymous?'Anonymous':(c.employeeName||'-'))}<div class="tiny">${esc(c.department||'')}</div></td><td>${esc(c.category||'-')}</td><td><span class="badge ${urgencyClass(c.urgency)}">${esc(c.urgency||'-')}</span></td><td><span class="badge ${statusClass(c.status)}">${esc(c.status)}</span></td><td><button class="primary" onclick="openDetail(${i})">View</button></td></tr>`).join('');$('emptyState').classList.toggle('hidden',rows.length!==0);$('resultCount').textContent=`Showing ${rows.length} of ${complaints.length} complaint(s)`}
+function openDetail(i){activeIndex=i;const c=complaints[i];$('modalTitle').textContent=c.subject||'Complaint';$('modalRef').textContent=c.reference||'-';const items=[['Reporter',c.anonymous?'Anonymous':(c.employeeName||'-')],['Employee ID',c.anonymous?'-':(c.employeeId||'-')],['Department',c.anonymous?'-':(c.department||'-')],['Contact',c.anonymous?'-':(c.contact||'-')],['Category',c.category||'-'],['Urgency',c.urgency||'-'],['Incident Date',c.incidentDate||'-'],['Location',c.location||'-'],['Submitted',fmtDate(c.submittedAt)]];$('detailGrid').innerHTML=items.map(([a,b])=>`<div class="detail-box"><small>${esc(a)}</small>${esc(b)}</div>`).join('');$('modalDetails').textContent=c.details||'-';$('modalOutcome').textContent=c.desiredOutcome||'-';$('editStatus').value=c.status||'New';$('assignedTo').value=c.assignedTo||'';$('managementRemarks').value=c.managementRemarks||'';$('detailModal').classList.add('show')}
+window.openDetail=openDetail;
+function closeDetail(){$('detailModal').classList.remove('show');activeIndex=null}
+$('closeModal').onclick=closeDetail;$('cancelEdit').onclick=closeDetail;$('detailModal').onclick=e=>{if(e.target===$('detailModal'))closeDetail()};$('saveChanges').onclick=()=>{if(activeIndex===null)return;complaints[activeIndex].status=$('editStatus').value;complaints[activeIndex].assignedTo=$('assignedTo').value.trim();complaints[activeIndex].managementRemarks=$('managementRemarks').value.trim();complaints[activeIndex].lastUpdatedAt=new Date().toISOString();save();closeDetail();render()};
+['search','statusFilter','urgencyFilter','categoryFilter'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',render));$('resetFilters').onclick=()=>{$('search').value='';$('statusFilter').value='';$('urgencyFilter').value='';$('categoryFilter').value='';render()};$('refreshBtn').onclick=render;
+$('exportBtn').onclick=()=>{load();const head=['Reference','Submitted At','Anonymous','Employee Name','Employee ID','Department','Contact','Category','Urgency','Incident Date','Location','Title','Details','Requested Outcome','Status','Assigned To','Management Remarks','Last Updated'];const data=complaints.map(c=>[c.reference,c.submittedAt,c.anonymous,c.employeeName,c.employeeId,c.department,c.contact,c.category,c.urgency,c.incidentDate,c.location,c.subject,c.details,c.desiredOutcome,c.status,c.assignedTo,c.managementRemarks,c.lastUpdatedAt]);const csv=[head,...data].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='complaints-export.csv';a.click();URL.revokeObjectURL(a.href)};
+function unlock(){sessionStorage.setItem(SESSION_KEY,'1');$('loginShell').classList.add('hidden');$('app').classList.remove('hidden');render()}
+function setupLogin(){const has=!!localStorage.getItem(PIN_KEY);$('confirmWrap').classList.toggle('hidden',has);$('pinLabel').textContent=has?'Management PIN':'Create PIN';$('loginBtn').textContent=has?'Open Dashboard':'Set PIN & Open Dashboard';$('loginIntro').textContent=has?'Enter the management PIN for this browser.':'Create a management PIN on this browser. This protects the dashboard interface only; it is not secure server-side authentication.'}
+$('loginBtn').onclick=()=>{const pin=$('pin').value.trim(),stored=localStorage.getItem(PIN_KEY);$('loginMsg').textContent='';if(stored){if(pin===stored){$('pin').value='';unlock()}else $('loginMsg').textContent='Incorrect PIN.'}else{const cp=$('confirmPin').value.trim();if(pin.length<4){$('loginMsg').textContent='Use at least 4 characters.';return}if(pin!==cp){$('loginMsg').textContent='PINs do not match.';return}localStorage.setItem(PIN_KEY,pin);$('pin').value='';$('confirmPin').value='';unlock()}};
+$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click()});$('logoutBtn').onclick=()=>{sessionStorage.removeItem(SESSION_KEY);$('app').classList.add('hidden');$('loginShell').classList.remove('hidden');setupLogin()};
+setupLogin();if(sessionStorage.getItem(SESSION_KEY)==='1')unlock();
+</script>
+</body>
+</html>
