@@ -9,27 +9,14 @@
 </style>
 </head>
 <body>
-<section id="loginShell" class="login-shell">
-  <div class="login-card">
-    <div class="brand"><div class="logo">RF</div><div><p class="eyebrow">SECURE MANAGEMENT ACCESS</p><h2 style="margin:0">Complaint Dashboard</h2></div></div>
-    <div class="tabs"><button id="loginTab" class="tab-active">Sign In</button><button id="signupTab" class="secondary">First-Time Sign Up</button></div>
-    <div class="field"><label for="email">Management Email</label><input id="email" type="email" autocomplete="username" placeholder="name@company.com"></div>
-    <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters"></div>
-    <div id="setupCodeWrap" class="field hidden"><label for="setupCode">First Admin Setup Code</label><input id="setupCode" type="password" placeholder="One-time setup code"><div class="tiny">Used only to claim the first management administrator account.</div></div>
-    <button id="authBtn" class="primary full">Sign In</button>
-    <div id="authMsg" class="error"></div>
-    <p class="tiny">Management accounts are authenticated by Supabase. Complaint data is not stored in this browser.</p>
-  </div>
-</section>
-
-<div id="app" class="app hidden">
+<div id="app" class="app">
   <header class="topbar">
     <div class="title"><div class="logo">RF</div><div><div style="font-size:11px;color:#93c5fd;font-weight:800;letter-spacing:.1em">CONFIDENTIAL</div><h2>Complaint Management Dashboard</h2></div></div>
-    <div class="top-actions"><button class="secondary" id="refreshBtn">Refresh</button><button class="secondary" id="exportBtn">Export CSV</button><button class="danger" id="logoutBtn">Sign Out</button></div>
+    <div class="top-actions"><button class="secondary" id="refreshBtn">Refresh</button><button class="secondary" id="exportBtn">Export CSV</button></div>
   </header>
 
   <main class="container">
-    <div class="live"><strong>Live database connected.</strong> Employee submissions from any device will appear here after refresh.</div>
+    <div class="live" style="background:#fff7ed;border-color:#fdba74;color:#9a3412"><strong>TEST MODE — NO LOGIN.</strong> Anyone with this dashboard URL can view and update test complaints. Use dummy data only until management authentication is re-enabled.</div>
     <section class="stats">
       <div class="stat"><small>Total Complaints</small><div id="statTotal" class="num">0</div></div>
       <div class="stat"><small>New</small><div id="statNew" class="num">0</div></div>
@@ -73,25 +60,13 @@
 <script>
 const SUPABASE_URL='https://llbphdhstunmzuqwgelw.supabase.co';
 const SUPABASE_KEY='sb_publishable_gllu7kHW5cv8mai22H7x4g_yhhJ-l04';
-const SESSION_KEY='rfComplaintAdminSession';
-const $=id=>document.getElementById(id);let mode='login',session=null,complaints=[],activeIndex=null;
-function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
-function headers(auth=true){const h={'Content-Type':'application/json','apikey':SUPABASE_KEY};if(auth&&session?.access_token)h.Authorization=`Bearer ${session.access_token}`;return h}
-function storeSession(s){session=s;localStorage.setItem(SESSION_KEY,JSON.stringify(s))}
-function clearSession(){session=null;localStorage.removeItem(SESSION_KEY)}
-function restoreSession(){try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{session=null}}
-function setMode(m){mode=m;$('setupCodeWrap').classList.toggle('hidden',m!=='signup');$('authBtn').textContent=m==='signup'?'Create Management Account':'Sign In';$('loginTab').className=m==='login'?'tab-active':'secondary';$('signupTab').className=m==='signup'?'tab-active':'secondary';$('authMsg').textContent=''}
-$('loginTab').onclick=()=>setMode('login');$('signupTab').onclick=()=>setMode('signup');
-async function signIn(email,password){const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:'POST',headers:headers(false),body:JSON.stringify({email,password})});const d=await r.json();if(!r.ok)throw new Error(d.msg||d.error_description||d.message||'Sign in failed');return d}
-async function signUp(email,password){const r=await fetch(`${SUPABASE_URL}/auth/v1/signup`,{method:'POST',headers:headers(false),body:JSON.stringify({email,password})});const d=await r.json();if(!r.ok)throw new Error(d.msg||d.error_description||d.message||'Sign up failed');return d}
-async function isAdmin(){if(!session?.user?.id)return false;const r=await fetch(`${SUPABASE_URL}/rest/v1/admin_users?user_id=eq.${encodeURIComponent(session.user.id)}&select=user_id`,{headers:headers()});if(r.status===401)return false;if(!r.ok)throw new Error('Unable to verify management access');const d=await r.json();return d.length>0}
-async function claimFirstAdmin(code){const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/claim_first_admin`,{method:'POST',headers:headers(),body:JSON.stringify({p_setup_code:code,p_display_name:'Management'})});const d=await r.json();if(!r.ok)throw new Error(d.message||'Unable to claim admin access');return d===true}
-async function enterApp(){if(!await isAdmin())throw new Error('This account does not have management access.');$('loginShell').classList.add('hidden');$('app').classList.remove('hidden');await loadComplaints()}
-$('authBtn').onclick=async()=>{const email=$('email').value.trim(),password=$('password').value,code=$('setupCode').value.trim();$('authMsg').className='error';$('authMsg').textContent='';if(!email||password.length<6){$('authMsg').textContent='Enter a valid email and a password of at least 6 characters.';return}try{if(mode==='signup'){if(!code){throw new Error('Enter the first admin setup code.')}const d=await signUp(email,password);if(!d.access_token){$('authMsg').className='success';$('authMsg').textContent='Account created. Check your email to confirm the account, then return here and sign in.';setMode('login');return}storeSession(d);const claimed=await claimFirstAdmin(code);if(!claimed)throw new Error('An administrator already exists. Ask an existing administrator for access.');await enterApp()}else{const d=await signIn(email,password);storeSession(d);await enterApp()}}catch(e){console.error(e);$('authMsg').textContent=e.message||'Authentication failed';clearSession()}};
+const $=id=>document.getElementById(id);let complaints=[],activeIndex=null;
+function esc(v){return String(v??'').replace(/[&<>\"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[s]))}
+function headers(){return {'Content-Type':'application/json','apikey':SUPABASE_KEY}}
 function fmtDate(v){if(!v)return '-';const d=new Date(v);return isNaN(d)?v:d.toLocaleString()}
 function statusClass(s){return {'New':'b-new','Under Review':'b-review','Investigation':'b-investigation','Resolved':'b-resolved','Closed':'b-closed'}[s]||'b-new'}
 function urgencyClass(u){if((u||'').startsWith('Critical'))return'u-critical';return {'High':'u-high','Medium':'u-medium','Low':'u-low'}[u]||'u-low'}
-async function loadComplaints(){const r=await fetch(`${SUPABASE_URL}/rest/v1/complaints?select=*&order=submitted_at.desc`,{headers:headers()});if(r.status===401){logout();return}if(!r.ok){throw new Error('Unable to load complaints');}complaints=await r.json();render()}
+async function loadComplaints(){const r=await fetch(`${SUPABASE_URL}/rest/v1/complaints?select=*&order=submitted_at.desc`,{headers:headers()});if(!r.ok){throw new Error('Unable to load complaints');}complaints=await r.json();render()}
 function setupCategories(){const current=$('categoryFilter').value;const cats=[...new Set(complaints.map(c=>c.category).filter(Boolean))].sort();$('categoryFilter').innerHTML='<option value="">All Categories</option>'+cats.map(c=>`<option>${esc(c)}</option>`).join('');$('categoryFilter').value=current}
 function filtered(){const q=$('search').value.trim().toLowerCase(),s=$('statusFilter').value,u=$('urgencyFilter').value,cat=$('categoryFilter').value;return complaints.map((c,i)=>({c,i})).filter(({c})=>{const hay=[c.reference,c.employee_name,c.employee_id,c.department,c.subject,c.category,c.location,c.details,c.assigned_to].join(' ').toLowerCase();return(!q||hay.includes(q))&&(!s||c.status===s)&&(!u||c.urgency===u)&&(!cat||c.category===cat)})}
 function render(){setupCategories();$('statTotal').textContent=complaints.length;$('statNew').textContent=complaints.filter(c=>c.status==='New').length;$('statReview').textContent=complaints.filter(c=>['Under Review','Investigation'].includes(c.status)).length;$('statResolved').textContent=complaints.filter(c=>['Resolved','Closed'].includes(c.status)).length;$('statCritical').textContent=complaints.filter(c=>(c.urgency||'').startsWith('Critical')).length;const rows=filtered();$('complaintRows').innerHTML=rows.map(({c,i})=>`<tr><td class="ref">${esc(c.reference||'-')}</td><td>${esc(fmtDate(c.submitted_at))}</td><td><div class="subject">${esc(c.subject||'-')}</div><div class="tiny">${esc(c.location||'')}</div></td><td>${esc(c.anonymous?'Anonymous':(c.employee_name||'-'))}<div class="tiny">${esc(c.department||'')}</div></td><td>${esc(c.category||'-')}</td><td><span class="badge ${urgencyClass(c.urgency)}">${esc(c.urgency||'-')}</span></td><td><span class="badge ${statusClass(c.status)}">${esc(c.status)}</span></td><td><button class="primary" onclick="openDetail(${i})">View</button></td></tr>`).join('');$('emptyState').classList.toggle('hidden',rows.length!==0);$('resultCount').textContent=`Showing ${rows.length} of ${complaints.length} complaint(s)`}
@@ -100,8 +75,7 @@ window.openDetail=openDetail;function closeDetail(){$('detailModal').classList.r
 $('saveChanges').onclick=async()=>{if(activeIndex===null)return;const c=complaints[activeIndex];$('saveMsg').textContent='';const payload={status:$('editStatus').value,assigned_to:$('assignedTo').value.trim()||null,management_remarks:$('managementRemarks').value.trim()||null};try{const r=await fetch(`${SUPABASE_URL}/rest/v1/complaints?id=eq.${encodeURIComponent(c.id)}`,{method:'PATCH',headers:{...headers(),Prefer:'return=representation'},body:JSON.stringify(payload)});const d=await r.json();if(!r.ok)throw new Error(d.message||'Update failed');closeDetail();await loadComplaints()}catch(e){$('saveMsg').textContent=e.message||'Unable to save changes'}};
 ['search','statusFilter','urgencyFilter','categoryFilter'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',render));$('resetFilters').onclick=()=>{$('search').value='';$('statusFilter').value='';$('urgencyFilter').value='';$('categoryFilter').value='';render()};$('refreshBtn').onclick=()=>loadComplaints().catch(e=>alert(e.message));
 $('exportBtn').onclick=()=>{const head=['Reference','Submitted At','Anonymous','Employee Name','Employee ID','Department','Contact','Category','Urgency','Incident Date','Location','Title','Details','Requested Outcome','Status','Assigned To','Management Remarks','Last Updated'];const data=complaints.map(c=>[c.reference,c.submitted_at,c.anonymous,c.employee_name,c.employee_id,c.department,c.contact,c.category,c.urgency,c.incident_date,c.location,c.subject,c.details,c.desired_outcome,c.status,c.assigned_to,c.management_remarks,c.last_updated_at]);const csv=[head,...data].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='complaints-export.csv';a.click();URL.revokeObjectURL(a.href)};
-function logout(){clearSession();$('app').classList.add('hidden');$('loginShell').classList.remove('hidden');$('password').value='';setMode('login')}$('logoutBtn').onclick=async()=>{try{if(session?.access_token)await fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:'POST',headers:headers()})}catch{}logout()};
-restoreSession();setMode('login');if(session?.access_token){enterApp().catch(()=>logout())}
+loadComplaints().catch(e=>{console.error(e);alert('Unable to load dashboard data. '+(e.message||''))})
 </script>
 </body>
 </html>
